@@ -1,43 +1,70 @@
-var config = require('./config');
-var manager = require('../lib');
+var lib = require('amqp-worker');
+var Client = lib.Client;
+var Worker = lib.Worker;
 
-var config = {
-  connection: {
-    url: 'amqp://localhost',
+// create instance of Client for a connection
+var client = new Client(
 
-    // socketOptions on amqplib connect
-    options: {}
-  },
-  queues: [
-    {
-      queue: {
-        // queue parameter on amqplib Channel#assertQueue
-        name: 'demo',
+  // AMQP URL to connect to, same as url parameter on amqplib connect
+  'amqp://localhost',
 
-        // options parameter on amqplib Channel#assertQueue
-        options: {
-          durable: true
-        }
-      },
-      worker: {
-        // msg as described in amqplib Channel#consume
-        handler: function(msg) {
-          console.log(JSON.parse(msg.content.toString()));
+  // options to send on connect, same as socketOptions on amqplib connect
+  {
+    heartbeat: 580
+  }
+);
 
-          // must return promise
-          return Promise.resolve('hi');
-        },
+// create instance of Worker for channel and consume
+var worker = new Worker(
+  // queue name
+  'demo',
 
-        // options parameter on amqplib Channel#consume
-        options: {
-          noAck: false
-        },
+  // message handler
+  // msg will be the same object passed to message callback on amqplib Channel#consume
+  function(msg, callback) {
+    try {
+      var data = JSON.parse(msg.content);
 
-        // count parameter on amqplib Channel#prefetch
-        count: 5
-      }
+      // the message is ack'ed on success
+      // second parameter is optional for logging
+      callback(null, data);
+    } catch(err) {
+
+      // the message is nack'ed on error
+      callback(err);
     }
-  ]
-};
+  },
 
-manager.start(config);
+  {
+    // queue options, same as options on amqplib Channel#assertQueue
+    queue: {
+      durable: true
+    },
+
+    // consumer options, same as options on amqplib Channel#consume
+    consumer: {
+
+      // if noAck is true, messages won't be ack/nack'ed upon completion
+      noAck: true
+    },
+
+    // prefetch count
+    count: 5,
+
+    // requeue on nack
+    requeue: true
+  }
+);
+
+// you can add multiple workers to a client
+client.addWorker(worker);
+
+// connect starts the connection and starts the queue workers
+client.connect(function(err, info) {
+  if (err) {
+    console.log(err);
+    return process.exit(1);
+  }
+
+  console.log(info);
+});

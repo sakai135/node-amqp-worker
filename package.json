@@ -1,6 +1,6 @@
 {
-  "name": "node-amqp-worker",
-  "version": "1.0.0",
+  "name": "amqp-worker",
+  "version": "0.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -18,6 +18,6 @@
   "homepage": "https://github.com/sakai135/node-amqp-worker",
   "dependencies": {
     "amqplib": "^0.3.0",
-    "bluebird": "^2.7.1"
+    "async": "^0.9.0"
   }
 }
