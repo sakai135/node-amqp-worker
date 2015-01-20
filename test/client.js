@@ -42,7 +42,6 @@ describe('Client', function() {
       client.addWorker(new Worker('demo', function(msg, callback) {
         callback();
       }));
-      client.connect(function() {});
       client.on('complete', function(data) {
         if (data.err) {
           done(data.err);
@@ -50,6 +49,7 @@ describe('Client', function() {
           client.close(done);
         }
       });
+      client.connect(function() {});
     });
 
   });
