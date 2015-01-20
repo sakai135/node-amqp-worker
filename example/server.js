@@ -23,11 +23,11 @@ var worker = new Worker(
   // msg will be the same object passed to message callback on amqplib Channel#consume
   function(msg, callback) {
     try {
-      var data = JSON.parse(msg.content);
+      var result = JSON.parse(msg.content);
 
       // the message is ack'ed on success
       // second parameter is optional for logging
-      callback(null, data);
+      callback(null, result);
     } catch(err) {
 
       // the message is nack'ed on error
@@ -35,6 +35,7 @@ var worker = new Worker(
     }
   },
 
+  // worker options
   {
     // queue options, same as options on amqplib Channel#assertQueue
     queue: {
@@ -55,6 +56,19 @@ var worker = new Worker(
     requeue: true
   }
 );
+
+// complete event when message handler callback is called
+worker.on('complete', function(
+          msg, // the message
+          err, // error object, if any
+          result // the second parameter passed to the callback
+          ) {
+  console.log({
+    messageId: msg.fields.deliveryTag,
+    err: err,
+    result: result
+  });
+});
 
 // you can add multiple workers to a client
 client.addWorker(worker);
