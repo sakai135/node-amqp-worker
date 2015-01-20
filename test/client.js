@@ -35,21 +35,22 @@ describe('Client', function() {
         chan.sendToQueue('demo', new Buffer(JSON.stringify({
           hi: 'test'
         })));
-        chan.close();
+        return chan;
+      }).then(function(chan) {
+        var client = new Client();
+        client.addWorker(new Worker('demo', function(msg, callback) {
+          callback();
+        }));
+        client.on('complete', function(data) {
+          if (data.err) {
+            done(data.err);
+          } else {
+            chan.close();
+            client.close(done);
+          }
+        });
+        client.connect(function() {});
       });
-
-      var client = new Client();
-      client.addWorker(new Worker('demo', function(msg, callback) {
-        callback();
-      }));
-      client.on('complete', function(data) {
-        if (data.err) {
-          done(data.err);
-        } else {
-          client.close(done);
-        }
-      });
-      client.connect(function() {});
     });
 
   });
