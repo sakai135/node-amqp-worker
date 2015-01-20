@@ -46,7 +46,7 @@ var worker = new Worker(
     consumer: {
 
       // if noAck is true, messages won't be ack/nack'ed upon completion
-      noAck: true
+      noAck: false
     },
 
     // prefetch count
@@ -58,27 +58,27 @@ var worker = new Worker(
 );
 
 // complete event when message handler callback is called
-worker.on('complete', function(
-          msg, // the message
-          err, // error object, if any
-          result // the second parameter passed to the callback
-          ) {
+worker.on('complete', function(data) {
   console.log({
-    messageId: msg.fields.deliveryTag,
-    err: err,
-    result: result
+    messageId: data.msg.fields.deliveryTag, // the message
+    err: data.err, // error object, if any
+    result: data.result // the second parameter passed to the callback
   });
+});
+
+// listen to all workers added to client
+client.on('complete', function(data) {
+  console.log('worker completed message');
 });
 
 // you can add multiple workers to a client
 client.addWorker(worker);
 
 // connect starts the connection and starts the queue workers
-client.connect(function(err, info) {
+client.connect(function(err) {
   if (err) {
     console.log(err);
     return process.exit(1);
   }
-
-  console.log(info);
+  console.log('client connected to server');
 });
