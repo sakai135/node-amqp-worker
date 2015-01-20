@@ -29,27 +29,18 @@ describe('Client', function() {
     });
 
     it('should emit complete on worker message completion', function(done) {
-      amqp.connect().then(function(conn) {
-        return conn.createChannel();
-      }).then(function(chan) {
-        chan.sendToQueue('demo', new Buffer(JSON.stringify({
-          hi: 'test'
-        })));
-        return chan;
-      }).then(function(chan) {
-        var client = new Client();
-        client.addWorker(new Worker('demo', function(msg, callback) {
-          callback();
-        }));
-        client.on('complete', function(data) {
-          if (data.err) {
-            done(data.err);
-          } else {
-            chan.close();
-            client.close(done);
-          }
-        });
-        client.connect(function() {});
+      var client = new Client();
+      var worker = new Worker('demo', function(msg, callback) { callback(); });
+      client.addWorker(worker);
+      client.on('complete', function(data) {
+        if (data.err) {
+          done(data.err);
+        } else {
+          client.close(done);
+        }
+      });
+      client.connect(function() {
+        worker.channel.sendToQueue('demo', new Buffer(1));
       });
     });
 
