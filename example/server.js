@@ -1,4 +1,4 @@
-var lib = require('amqp-worker');
+var lib = require('../'); // require('amqp-worker');
 var Client = lib.Client;
 var Worker = lib.Worker;
 
@@ -6,7 +6,7 @@ var Worker = lib.Worker;
 var client = new Client(
 
   // AMQP URL to connect to, same as url parameter on amqplib connect
-  'amqp://localhost',
+  'amqp://guest:guest@localhost',
 
   // options to send on connect, same as socketOptions on amqplib connect
   {
