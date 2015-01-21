@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "lab -v -p && lab -p -t 100 -r html -o coverage.html"
+    "test": "lab -v -p -t 100",
+    "test-cov": "lab -v -p -t 100 -r html -o coverage.html && coverage.html"
   },
   "repository": {
     "type": "git",
