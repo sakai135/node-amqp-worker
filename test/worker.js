@@ -82,7 +82,7 @@ lab.experiment('Worker', function() {
 
   });
   lab.experiment('#start', function() {
-    /* fails due to amqplib throwing an error instead of using the callback
+
     lab.test('error on createChannel failure', function(done) {
       var client = new Client('amqp://localhost?channelMax=1');
       var worker = new Worker('workertest7',
@@ -99,6 +99,6 @@ lab.experiment('Worker', function() {
         }
       });
     });
-    */
+
   });
 });
