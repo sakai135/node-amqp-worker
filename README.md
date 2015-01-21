@@ -38,3 +38,5 @@ client.connect(function() {
   console.log('workers started');
 });
 ```
+
+For more details, see the [example](example/server.js).
