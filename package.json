@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "lab -v -p",
+    "test": "lab -v -p -t 100",
     "test-cov-html": "lab -v -p -r html -o coverage.html && coverage.html",
     "test-cov": "lab -v -p -r lcov -o coverage.lcov"
   },
