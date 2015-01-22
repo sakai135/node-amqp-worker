@@ -1,7 +1,7 @@
 {
   "name": "amqp-worker",
   "version": "0.0.1",
-  "description": "",
+  "description": "A job queue backed by AMQP/RabbitMQ",
   "main": "index.js",
   "scripts": {
     "test": "lab -v -p -t 100",
@@ -12,8 +12,8 @@
     "type": "git",
     "url": "https://github.com/sakai135/node-amqp-worker.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "sakai135",
+  "license": "Apache",
   "bugs": {
     "url": "https://github.com/sakai135/node-amqp-worker/issues"
   },
