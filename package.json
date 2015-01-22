@@ -13,7 +13,7 @@
     "url": "https://github.com/sakai135/node-amqp-worker.git"
   },
   "author": "sakai135",
-  "license": "Apache",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/sakai135/node-amqp-worker/issues"
   },
